@@ -182,7 +182,7 @@ class _LoginInteractionScreenState extends State<LoginInteractionScreen>
 
     //Animation controller for showing animation after reveal
     _postRevealAnimationController =
-        AnimationController(duration: Duration(milliseconds: 400), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 650), vsync: this);
 
     //Scale animation for showing center logo after reveal is completed
     _centerIconScale = Tween<double>(begin: 0, end: .5).animate(CurvedAnimation(
@@ -232,9 +232,7 @@ class _LoginInteractionScreenState extends State<LoginInteractionScreen>
         break;
     }
 
-    return Material(
-      child: Stack(children: stackChildren),
-    );
+    return Stack(children: stackChildren);
   }
 
   @override
