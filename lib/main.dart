@@ -10,11 +10,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return LoginInteractionScreen(
-        size.height,
-        size.width,
-        (context) => Container(child: _getLoginForm()),
-        (context) => Container(child: _getRegisterForm()));
+    return Material(
+      child: LoginInteractionScreen(
+          size.height,
+          size.width,
+          (context) => Container(child: _getLoginForm()),
+          (context) => Container(child: _getRegisterForm())),
+    );
   }
 
   Widget _getLoginForm() {
