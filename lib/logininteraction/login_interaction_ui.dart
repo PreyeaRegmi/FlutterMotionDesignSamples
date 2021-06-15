@@ -47,7 +47,8 @@ class _LoginInteractionScreenState extends State<LoginInteractionScreen>
   CURRENT_SCREEN_STATE currentScreenState = CURRENT_SCREEN_STATE.INIT_STATE;
 
   late final Animation<RelativeRect> _titleBaseLinePosTranslateAnim,
-      _sideIconsTranslateAnim;
+      _sideIconsTranslateAnim,
+      _pageViewPosAnimation;
 
   late final Animation<double> _centerIconScale;
 
@@ -158,22 +159,6 @@ class _LoginInteractionScreenState extends State<LoginInteractionScreen>
         .animate(CurvedAnimation(
             parent: _revealAnimationController, curve: Curves.easeInOutBack));
 
-    //Animation controller for showing animation after reveal
-    _postRevealAnimationController =
-        AnimationController(duration: Duration(milliseconds: 600), vsync: this)
-          ..addStatusListener((status) {
-            // if (status == AnimationStatus.completed)
-            //   setState(() {
-            //
-            //   });
-          });
-
-    //Scale animation for showing center logo after reveal is completed
-    _centerIconScale = Tween<double>(begin: 0, end: .5).animate(CurvedAnimation(
-      parent: _postRevealAnimationController,
-      curve: Curves.fastOutSlowIn,
-    ));
-
     //Tween for animating height of the curve during reveal process
     _swipeArcAnimation =
         Tween<double>(begin: _initialCurveHeight, end: _finalCurveHeight)
@@ -194,6 +179,27 @@ class _LoginInteractionScreenState extends State<LoginInteractionScreen>
       ],
     ).animate(CurvedAnimation(
         parent: _revealAnimationController, curve: Curves.easeInCubic));
+
+    //Animation controller for showing animation after reveal
+    _postRevealAnimationController =
+        AnimationController(duration: Duration(milliseconds: 400), vsync: this);
+
+    //Scale animation for showing center logo after reveal is completed
+    _centerIconScale = Tween<double>(begin: 0, end: .5).animate(CurvedAnimation(
+      parent: _postRevealAnimationController,
+      curve: Curves.fastOutSlowIn,
+    ));
+
+    _pageViewPosAnimation = RelativeRectTween(
+            begin: RelativeRect.fromLTRB(0, widget.height, 0, 0),
+            end: RelativeRect.fromLTRB(
+              0,
+              widget.height - _finalCurveHeight,
+              0,
+              0,
+            ))
+        .animate(CurvedAnimation(
+            parent: _postRevealAnimationController, curve: Curves.easeOutCirc));
 
     _pageViewController = PageController();
   }
@@ -220,7 +226,7 @@ class _LoginInteractionScreenState extends State<LoginInteractionScreen>
       case CURRENT_SCREEN_STATE.POST_REVEAL_STATE:
         stackChildren.addAll(_getBgWidgets());
         stackChildren.addAll(_getDefaultWidgets());
-        stackChildren.insert(stackChildren.length - 1, _getCurvedPageSwitcher());
+        stackChildren.add(_getCurvedPageSwitcher());
         stackChildren.addAll(_getPostRevealAnimationStateWidgets());
         stackChildren.add(buildPages());
         break;
@@ -319,11 +325,10 @@ class _LoginInteractionScreenState extends State<LoginInteractionScreen>
                       ),
                       Text(
                         "Swipe up to start",
-                        style: TextStyle(color: Colors.grey.shade800),
+                        style: TextStyle(color: Colors.grey),
                       )
                     ]),
               ))),
-
     ];
   }
 
@@ -349,15 +354,14 @@ class _LoginInteractionScreenState extends State<LoginInteractionScreen>
     ];
   }
 
-  Widget _getBrandTitle()
-  {
-    return  PositionedTransition(
+  Widget _getBrandTitle() {
+    return PositionedTransition(
         rect: _titleBaseLinePosTranslateAnim,
         child: Center(
             child: Text("B\$D",
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 28,
+                    fontSize: 36,
                     fontWeight: FontWeight.w800))));
   }
 
@@ -409,9 +413,11 @@ class _LoginInteractionScreenState extends State<LoginInteractionScreen>
               parent: _tabSelectionAnimationController,
               curve: Curves.easeOutBack));
 
-      _tabRippleEffectAnimation=Tween<double>(begin: 0,end: TAB_RIPPLE_RADIUS).animate(CurvedAnimation(
-          parent: _tabSelectionAnimationController,
-          curve: Curves.ease));
+      _tabRippleEffectAnimation =
+          Tween<double>(begin: 0, end: TAB_RIPPLE_RADIUS).animate(
+              CurvedAnimation(
+                  parent: _tabSelectionAnimationController,
+                  curve: Curves.ease));
 
       _pageViewController.animateToPage(1,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -430,9 +436,11 @@ class _LoginInteractionScreenState extends State<LoginInteractionScreen>
               parent: _tabSelectionAnimationController,
               curve: Curves.easeOutBack));
 
-      _tabRippleEffectAnimation=Tween<double>(begin: 0,end: TAB_RIPPLE_RADIUS).animate(CurvedAnimation(
-          parent: _tabSelectionAnimationController,
-          curve: Curves.ease));
+      _tabRippleEffectAnimation =
+          Tween<double>(begin: 0, end: TAB_RIPPLE_RADIUS).animate(
+              CurvedAnimation(
+                  parent: _tabSelectionAnimationController,
+                  curve: Curves.ease));
 
       _pageViewController.animateToPage(0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -462,9 +470,7 @@ class _LoginInteractionScreenState extends State<LoginInteractionScreen>
       widgets.add(PositionedTransition(
           rect: _tabSelectionAnimation!,
           child: Container(
-            decoration: BoxDecoration(
-              color: backgroundColor
-            ),
+            decoration: BoxDecoration(color: backgroundColor),
           )));
     // if(_tabRippleEffectAnimation!=null)
     //   widgets.add(Container(
@@ -482,24 +488,34 @@ class _LoginInteractionScreenState extends State<LoginInteractionScreen>
       ),
     ));
 
-
     return widgets;
   }
 
   //Add the respective page supplied by user
   Widget buildPages() {
-    return Positioned(
-      top: widget.height - _finalCurveHeight,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      child: PageView(
-        scrollDirection: Axis.horizontal,
-        controller: _pageViewController,
-        children: <Widget>[widget.leftPage(context), widget.rightPage(context)],
-        physics: NeverScrollableScrollPhysics(),
-      ),
-    );
+    // return Positioned(
+    //   left: 0,
+    //   top: widget.height,
+    //   bottom: 0,
+    //   right: 0,
+    //   child: Container(height: widget.height-_finalCurveHeight,color: Colors.yellow,
+    //   )
+    // );
+
+    return PositionedTransition(
+        rect: _pageViewPosAnimation,
+        child: Container(
+          height: widget.height - _finalCurveHeight,
+          child: PageView(
+            scrollDirection: Axis.horizontal,
+            controller: _pageViewController,
+            children: <Widget>[
+              widget.leftPage(context),
+              widget.rightPage(context)
+            ],
+            physics: NeverScrollableScrollPhysics(),
+          ),
+        ));
   }
 }
 
@@ -584,8 +600,9 @@ class _CurvePageSwitchIndicator extends State<CurvePageSwitchIndicator>
                               fontSize: 22,
                               fontWeight: FontWeight.w800),
                         )))),
-            GestureDetector(onTap: _handleLeftTab,
-              )
+            GestureDetector(
+              onTap: _handleLeftTab,
+            )
           ])),
           Expanded(
               child: Stack(children: [
@@ -605,7 +622,8 @@ class _CurvePageSwitchIndicator extends State<CurvePageSwitchIndicator>
                                     : Colors.white60,
                                 fontSize: 22,
                                 fontWeight: FontWeight.w800))))),
-                GestureDetector(onTap: _handleRightTab,
+            GestureDetector(
+              onTap: _handleRightTab,
             )
           ])),
         ],
