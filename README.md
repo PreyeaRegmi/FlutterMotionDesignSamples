@@ -3,7 +3,7 @@
 A Motion design implemented using flutter. A step by step overview of implmentation detail is available on [Medium](https://flutter.dev/docs/get-started/codelab). The [reference design](https://dribbble.com/shots/5580777-Login-Interaction) is copyright to the respective [author](https://medium.com/r?url=https%3A%2F%2Fdribbble.com%2Fjohnyvino).
 
 ## Demo
-<a href="https://github.com/PreyeaRegmi/FlutterMotionDesignSamples/blob/master/screenshot/demo.gif"><img src="https://github.com/PreyeaRegmi/FlutterMotionDesignSamples/blob/master/screenshots/demo.gif" alt="demo.gif" border="0"></a>
+<a href="https://raw.githubusercontent.com/PreyeaRegmi/FlutterMotionDesignSamples/master/screenshot/demo.gif"><img src="https://raw.githubusercontent.com/PreyeaRegmi/FlutterMotionDesignSamples/master/screenshot/demo.gif" alt="demo.gif" border="0"></a>
 
 ## Installation
 If you haven't setup flutter on your local machine, you can follow [setup instructions](https://flutter.dev/docs/get-started/install).
