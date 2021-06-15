@@ -8,7 +8,7 @@ A Motion design implemented using flutter. A step by step overview of implmentat
 ## Installation
 If you haven't setup flutter on your local machine, you can follow [setup instructions](https://flutter.dev/docs/get-started/install).
  Running app on debug mode may lag some animation due to dev tools. So a release [android apk](
- https://github.com/PreyeaRegmi/FlutterMotionDesignSamples/blob/master/apk/demo.apk) is included in the repo for preview.
+ https://github.com/PreyeaRegmi/FlutterMotionDesignSamples/blob/master/apk/demo.apk?raw=true) is included in the repo for preview.
 
 
 ## License
